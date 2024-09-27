@@ -7,7 +7,7 @@ sudo apt upgrade
 
 #---------------------------------------
 # Instalando dependências
-sudo apt install wget tar sway rofi foot xwayland xdg-desktop-portal xdg-desktop-portal-gtk snapd
+sudo apt install wget tar sway rofi foot xwayland xdg-desktop-portal xdg-desktop-portal-gtk at-spi2-core snapd
 
 #---------------------------------------
 # Configurando o sway
