@@ -27,7 +27,7 @@ sudo apt install \
 #---------------------------------------
 # Configurando o início automático
 sudo cp /usr/lib/systemd/system/getty@.service /etc/systemd/system/autologin@.service
-EXEC_START="ExecStart=-/sbin/agetty -o '-p -f -- \\u' --noclear --autologin xibo %I \$TERM"
+EXEC_START="ExecStart=-/sbin/agetty -o '-p -f -- \\\\u' --noclear --autologin xibo %I \$TERM"
 sudo sudo sed -i 's|^ExecStart=.*|'"$EXEC_START"'|' /etc/systemd/system/autologin@.service
 sudo systemctl disable getty@tty1
 sudo systemctl enable autologin@tty1.service
