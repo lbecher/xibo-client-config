@@ -1,11 +1,28 @@
 #!/bin/bash
 
 #---------------------------------------
-# Atualizando o sistema
-sudo apt update
+# Identifica a arquitetura do sistema e seta variáveis
+BASE_URL="https://github.com/lbecher/xibo-client-config/releases/download/v0.2.0"
+ARCH=$(uname -m)
+case "$ARCH" in
+    "x86_64")
+        FILE="xibo-player_1.8-R7_amd64.snap"
+        ;;
+    "armv7l")
+        FILE="xibo-player_1.8-R7_armhf.snap"
+        ;;
+    "aarch64")
+        FILE="xibo-player_1.8-R7_arm64.snap"
+        ;;
+    *)
+        echo "Arquitetura não suportada: $ARCH"
+        exit 1
+        ;;
+esac
 
 #---------------------------------------
 # Instalando dependências
+sudo apt update
 sudo apt install \
     wget \
     tar \
@@ -44,5 +61,5 @@ cp sway_config ~/.config/sway/config
 
 #---------------------------------------
 # Instalando dependências
-wget https://github.com/lbecher/xibo-client-config/releases/download/v0.1.0/xibo-player_1.8-R7_armhf.snap
-sudo snap install --dangerous xibo-player_1.8-R7_armhf.snap
+wget "$BASE_URL/$FILE"
+sudo snap install --dangerous "$FILE"
