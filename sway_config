@@ -25,10 +25,11 @@ bindsym $mod+o exec snap run xibo-player.options
 bindsym $mod+t exec $term
 bindsym $mod+f kill
 bindsym $mod+m exec $menu
+bindsym $mod+a exec pavucontrol
 
-bindsym XF86AudioRaiseVolume exec pw-volume change +5%
-bindsym XF86AudioLowerVolume exec pw-volume change -5%
-bindsym XF86AudioMute exec pw-volume mute toggle
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%"
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 
 floating_modifier $mod normal
 
