@@ -26,10 +26,9 @@ sudo apt update
 sudo apt install \
     wget \
     tar \
-    pipewire \
-    pipewire-alsa \
-    pipewire-jack \
-    pipewire-pulse \
+    pulseaudio \
+    pavucontrol \
+    paprefs \
     xdg-desktop-portal \
     xdg-desktop-portal-gtk \
     xdg-desktop-portal-wlr \
