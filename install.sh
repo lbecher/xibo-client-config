@@ -38,7 +38,10 @@ sudo apt install \
     rofi \
     foot \
     snapd \
-    at-spi2-core
+    at-spi2-core \
+    gvfs \
+    gvfs-backends \
+    nautilus
 
 #---------------------------------------
 # Configurando o início automático
