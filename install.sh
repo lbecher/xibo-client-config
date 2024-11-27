@@ -27,6 +27,7 @@ sudo apt install \
     wget \
     tar \
     pulseaudio \
+    pulseaudio-utils \
     pavucontrol \
     paprefs \
     xdg-desktop-portal \
