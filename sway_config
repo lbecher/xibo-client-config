@@ -5,7 +5,7 @@ set $down j
 set $up k
 set $right l
 
-set $term foot
+set $term gnome-console
 set $menu rofi -terminal '$term' -show combi -combi-modes drun
 
 include /etc/sway/config-vars.d/*
