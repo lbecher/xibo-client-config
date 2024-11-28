@@ -35,7 +35,9 @@ bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 
 floating_modifier $mod normal
 
-bindsym $mod+Shift+r reload
+bindsym $mod+Shift+d poweroff
+bindsym $mod+Shift+r reboot
+bindsym $mod+Shift+l reload
 bindsym $mod+Shift+f exec swaynag -t warning -m 'Você realmente deseja fechar o Sway?' -B 'Sim, fechar o Sway' 'swaymsg exit'
 
 # Move your focus around
