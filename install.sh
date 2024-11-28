@@ -41,9 +41,8 @@ sudo apt install \
     at-spi2-core \
     gvfs \
     gvfs-backends \
-    nautilus \
+    thunar \
     network-manager-gnome
-    
 
 #---------------------------------------
 # Configurando o início automático
@@ -59,9 +58,7 @@ fi' > ~/.bash_profile
 
 #---------------------------------------
 # Configurando o sway
-mkdir -p ~/.config/foot
 mkdir -p ~/.config/sway
-cp foot_ini ~/.config/foot/foot.ini
 cp sway_config ~/.config/sway/config
 
 #---------------------------------------
