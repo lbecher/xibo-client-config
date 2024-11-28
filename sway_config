@@ -26,7 +26,8 @@ bindsym $mod+t exec $term
 bindsym $mod+f kill
 bindsym $mod+m exec $menu
 bindsym $mod+a exec pavucontrol
-bindsym $mod+n exec nautilus --no-desktop
+bindsym $mod+n exec thunar
+bindsym $mod+i exec nm-connection-editor
 
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%"
