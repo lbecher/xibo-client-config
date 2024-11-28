@@ -36,13 +36,13 @@ sudo apt install \
     xwayland \
     sway \
     rofi \
+    alacritty \
     snapd \
     at-spi2-core \
     gvfs \
     gvfs-backends \
     nautilus \
-    network-manager-gnome \
-    gnome-console
+    network-manager-gnome
     
 
 #---------------------------------------
