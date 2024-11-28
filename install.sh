@@ -36,12 +36,14 @@ sudo apt install \
     xwayland \
     sway \
     rofi \
-    foot \
     snapd \
     at-spi2-core \
     gvfs \
     gvfs-backends \
-    nautilus
+    nautilus \
+    network-manager-gnome \
+    gnome-console
+    
 
 #---------------------------------------
 # Configurando o início automático
