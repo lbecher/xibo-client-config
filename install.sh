@@ -53,7 +53,7 @@ sudo systemctl disable getty@tty1
 sudo systemctl enable autologin@tty1.service
 touch ~/.bash_profile
 echo 'if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
-    exec sway
+    WLR_LIBINPUT_NO_DEVICES=1 exec sway
 fi' > ~/.bash_profile
 
 #---------------------------------------
