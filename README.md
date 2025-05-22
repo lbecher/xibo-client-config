@@ -36,6 +36,7 @@ git clone https://github.com/lbecher/xibo-client-config
 Por fim, execute o script de instalação:
 
 ```bash
+cd xibo-client-config
 chmod +x install.sh
 ./install.sh
 ```
