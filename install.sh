@@ -2,17 +2,17 @@
 
 #---------------------------------------
 # Identifica a arquitetura do sistema e seta variáveis
-BASE_URL="https://github.com/lbecher/xibo-client-config/releases/download/v0.2.0"
+BASE_URL="https://github.com/lbecher/xibo-client-config/releases/download/v0.3.0"
 ARCH=$(uname -m)
 case "$ARCH" in
     "x86_64")
-        FILE="xibo-player_1.8-R7_amd64.snap"
+        FILE="xibo-player-1.8-R7-amd64-portable.tar.gz"
         ;;
     "armv7l")
-        FILE="xibo-player_1.8-R7_armhf.snap"
+        FILE="xibo-player-1.8-R7-armhf-portable.tar.gz"
         ;;
     "aarch64")
-        FILE="xibo-player_1.8-R7_arm64.snap"
+        FILE="xibo-player-1.8-R7-arm64-portable.tar.gz"
         ;;
     *)
         echo "Arquitetura não suportada: $ARCH"
@@ -37,7 +37,6 @@ sudo apt install \
     sway \
     rofi \
     alacritty \
-    snapd \
     at-spi2-core \
     gvfs \
     gvfs-backends \
@@ -64,4 +63,7 @@ cp sway_config ~/.config/sway/config
 #---------------------------------------
 # Instalando dependências
 wget "$BASE_URL/$FILE"
-sudo snap install --dangerous "$FILE"
+tar -xzf "$FILE"
+sudo mv xibo-player-1.8-R7-amd64-portable /opt/xibo-player
+sudo ln -s /opt/xibo-player/xibo-options.sh /usr/local/bin/xibo-options
+sudo ln -s /opt/xibo-player/xibo-player.sh /usr/local/bin/xibo-player

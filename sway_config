@@ -16,11 +16,11 @@ input * {
     xkb_layout "br"
 }
 
-exec env WAYLAND_DISPLAY="" snap run xibo-player.disabled-watchdog
+exec env WAYLAND_DISPLAY="" xibo-player
 
 # Xibo
-bindsym $mod+x exec env WAYLAND_DISPLAY="" snap run xibo-player.disabled-watchdog
-bindsym $mod+o exec snap run xibo-player.options
+bindsym $mod+x exec env WAYLAND_DISPLAY="" xibo-player
+bindsym $mod+o exec xibo-options
 
 bindsym $mod+t exec $term
 bindsym $mod+f kill
