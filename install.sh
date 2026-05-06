@@ -39,11 +39,11 @@ pavucontrol
 
 sudo apt install -y \
 xdg-desktop-portal \
-xdg-desktop-portal-wlr \ 
+xdg-desktop-portal-wlr \
 xwayland \
 sway \
 rofi \
-alacritty \ 
+alacritty \
 thunar
 
 #---------------------------------------
