@@ -10,17 +10,17 @@ set $menu rofi -terminal '$term' -show combi -combi-modes drun
 
 include /etc/sway/config-vars.d/*
 
-output * resolution 1280x720 position 1280,0
+output * resolution 1920x1080 position 1920,0
 
 input * {
     xkb_layout "br"
 }
 
-exec env WAYLAND_DISPLAY="" snap run xibo-player.disabled-watchdog
+exec xibo-player
 
 # Xibo
-bindsym $mod+x exec env WAYLAND_DISPLAY="" snap run xibo-player.disabled-watchdog
-bindsym $mod+o exec snap run xibo-player.options
+bindsym $mod+x exec xibo-player
+bindsym $mod+o exec xibo-options
 
 bindsym $mod+t exec $term
 bindsym $mod+f kill
