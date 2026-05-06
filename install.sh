@@ -75,10 +75,14 @@ EOF
 # Autologin
 
 sudo cp /usr/lib/systemd/system/getty@.service /etc/systemd/system/autologin@.service
-EXEC_START="ExecStart=-/sbin/agetty -o '-p -f -- \\u' --noclear --autologin xibo %I $TERM"
-sudo sed -i "s|^ExecStart=.*|$EXEC_START|" /etc/systemd/system/autologin@.service
+EXEC_START="ExecStart=-/sbin/agetty -o '-p -f -- \\\\u' --noclear --autologin xibo %I \$TERM"
+sudo sudo sed -i 's|^ExecStart=.*|'"$EXEC_START"'|' /etc/systemd/system/autologin@.service
 sudo systemctl disable getty@tty1
-sudo systemctl enable [autologin@tty1.service](mailto:autologin@tty1.service)
+sudo systemctl enable autologin@tty1.service
+touch ~/.bash_profile
+echo 'if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
+    WLR_LIBINPUT_NO_DEVICES=1 exec sway
+fi' > ~/.bash_profile
 
 #---------------------------------------
 # Auto start sway
@@ -102,6 +106,7 @@ cp sway_config ~/.config/sway/config
 # Timezone
 
 sudo timedatectl set-timezone America/Sao_Paulo
+sudo timedatectl set-ntp true
 
 #---------------------------------------
 # Xibo
