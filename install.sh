@@ -26,24 +26,24 @@ sudo apt update
 #---------------------------------------
 # PipeWire
 
-sudo apt install -y 
-pipewire 
-pipewire-audio 
-pipewire-pulse 
-wireplumber 
-libspa-0.2-bluetooth 
+sudo apt install -y \
+pipewire \
+pipewire-audio \
+pipewire-pulse \
+wireplumber \
+libspa-0.2-bluetooth \
 pavucontrol
 
 #---------------------------------------
 # Wayland + Sway + Portal
 
-sudo apt install -y 
-xdg-desktop-portal 
-xdg-desktop-portal-wlr 
-xwayland 
-sway 
-rofi 
-alacritty 
+sudo apt install -y \
+xdg-desktop-portal \
+xdg-desktop-portal-wlr \ 
+xwayland \
+sway \
+rofi \
+alacritty \ 
 thunar
 
 #---------------------------------------
