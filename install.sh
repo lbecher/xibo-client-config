@@ -1,12 +1,23 @@
 #!/bin/bash
 
+set -e
+
 #---------------------------------------
-# Identifica a arquitetura do sistema e seta variáveis
+# Configurações gerais
+
 XIBO_VERSION="${XIBO_VERSION:-4.0.9}"
+AUTOLOGIN_USER="${AUTOLOGIN_USER:-xibo}"
+AUTOLOGIN_HOME="/home/${AUTOLOGIN_USER}"
+
 BASE_URL="https://github.com/lbecher/xibo-client-config/releases/download/v${XIBO_VERSION}"
+
+#---------------------------------------
+# Identifica a arquitetura do sistema
+
 ARCH=$(dpkg --print-architecture)
+
 case "$ARCH" in
-    "amd64"|"arm64")
+    amd64|arm64)
         FILE="xibo-player_${XIBO_VERSION}_${ARCH}.deb"
         ;;
     *)
@@ -15,10 +26,32 @@ case "$ARCH" in
         ;;
 esac
 
+echo "Arquitetura detectada: $ARCH"
+echo "Pacote Xibo: $FILE"
+
+#---------------------------------------
+# Verifica se o usuário xibo existe
+
+if ! id "$AUTOLOGIN_USER" >/dev/null 2>&1; then
+    echo "Usuário '$AUTOLOGIN_USER' não existe."
+    echo "Criando usuário..."
+
+    sudo useradd \
+        --create-home \
+        --shell /bin/bash \
+        "$AUTOLOGIN_USER"
+fi
+
+# Garante que o diretório home existe
+sudo mkdir -p "$AUTOLOGIN_HOME"
+sudo chown "$AUTOLOGIN_USER:$AUTOLOGIN_USER" "$AUTOLOGIN_HOME"
+
 #---------------------------------------
 # Instalando dependências
+
 sudo apt update
-sudo apt install \
+
+sudo apt install -y \
     wget \
     tar \
     pulseaudio \
@@ -39,25 +72,112 @@ sudo apt install \
     network-manager-gnome
 
 #---------------------------------------
-# Configurando o início automático
-sudo cp /usr/lib/systemd/system/getty@.service /etc/systemd/system/autologin@.service
-EXEC_START="ExecStart=-/sbin/agetty -o '-p -f -- \\\\u' --noclear --autologin xibo %I \$TERM"
-sudo sudo sed -i 's|^ExecStart=.*|'"$EXEC_START"'|' /etc/systemd/system/autologin@.service
-sudo systemctl disable getty@tty1
-sudo systemctl enable autologin@tty1.service
-touch ~/.bash_profile
-echo 'if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
-    WLR_LIBINPUT_NO_DEVICES=1 exec sway
-fi' > ~/.bash_profile
+# Configurando autologin no tty1
+#
+# Em vez de criar um autologin@.service separado,
+# sobrescrevemos apenas o ExecStart do getty@tty1.
+
+echo "Configurando autologin para '$AUTOLOGIN_USER'..."
+
+sudo mkdir -p /etc/systemd/system/getty@tty1.service.d
+
+sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf >/dev/null <<EOF
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin ${AUTOLOGIN_USER} --noclear %I \$TERM
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable getty@tty1.service
+
+# Caso uma versão anterior deste script tenha criado
+# autologin@tty1.service, desativa para evitar conflito.
+
+if systemctl list-unit-files | grep -q '^autologin@\.service'; then
+    sudo systemctl disable autologin@tty1.service 2>/dev/null || true
+fi
 
 #---------------------------------------
-# Configurando o sway
-mkdir -p ~/.config/sway
-cp sway_config ~/.config/sway/config
+# Configurando inicialização automática do Sway
+
+echo "Configurando início automático do Sway..."
+
+sudo tee "$AUTOLOGIN_HOME/.bash_profile" >/dev/null <<'EOF'
+# Inicia o Sway automaticamente somente no tty1.
+#
+# DISPLAY vazio:
+#   evita tentar iniciar outra sessão gráfica X11.
+#
+# WAYLAND_DISPLAY vazio:
+#   evita iniciar um segundo compositor Wayland.
+#
+# tty1:
+#   garante que conexões SSH e outros terminais
+#   não iniciem o Sway.
+
+if [[ -z "$DISPLAY" ]] && \
+   [[ -z "$WAYLAND_DISPLAY" ]] && \
+   [[ "$(tty)" == "/dev/tty1" ]]; then
+
+    exec env WLR_LIBINPUT_NO_DEVICES=1 sway
+fi
+EOF
+
+sudo chown "$AUTOLOGIN_USER:$AUTOLOGIN_USER" \
+    "$AUTOLOGIN_HOME/.bash_profile"
+
+sudo chmod 644 "$AUTOLOGIN_HOME/.bash_profile"
 
 #---------------------------------------
-# Instalando dependências
+# Configurando o Sway
+
+echo "Configurando Sway..."
+
+sudo -u "$AUTOLOGIN_USER" mkdir -p \
+    "$AUTOLOGIN_HOME/.config/sway"
+
+if [[ ! -f "sway_config" ]]; then
+    echo "Erro: arquivo sway_config não encontrado."
+    exit 1
+fi
+
+sudo cp \
+    sway_config \
+    "$AUTOLOGIN_HOME/.config/sway/config"
+
+sudo chown -R \
+    "$AUTOLOGIN_USER:$AUTOLOGIN_USER" \
+    "$AUTOLOGIN_HOME/.config"
+
+#---------------------------------------
+# Instalando o Xibo Player
+
+echo "Baixando Xibo Player ${XIBO_VERSION}..."
+
 DEB_PATH=$(mktemp --suffix=.deb)
-trap 'rm -f "$DEB_PATH"' EXIT
-wget --output-document="$DEB_PATH" "$BASE_URL/$FILE"
+
+cleanup() {
+    rm -f "$DEB_PATH"
+}
+
+trap cleanup EXIT
+
+wget \
+    --output-document="$DEB_PATH" \
+    "$BASE_URL/$FILE"
+
+echo "Instalando Xibo Player..."
+
 sudo apt install -y "$DEB_PATH"
+
+#---------------------------------------
+# Ajustando permissões finais
+
+sudo chown -R \
+    "$AUTOLOGIN_USER:$AUTOLOGIN_USER" \
+    "$AUTOLOGIN_HOME"
+
+#---------------------------------------
+# Recarrega configuração do systemd
+
+sudo systemctl daemon-reload
