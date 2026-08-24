@@ -40,11 +40,19 @@ sudo apt install \
 
 #---------------------------------------
 # Configurando o início automático
-sudo cp /usr/lib/systemd/system/getty@.service /etc/systemd/system/autologin@.service
-EXEC_START="ExecStart=-/sbin/agetty -o '-p -f -- \\\\u' --noclear --autologin xibo %I \$TERM"
-sudo sudo sed -i 's|^ExecStart=.*|'"$EXEC_START"'|' /etc/systemd/system/autologin@.service
-sudo systemctl disable getty@tty1
-sudo systemctl enable autologin@tty1.service
+if ! id -u xibo >/dev/null 2>&1; then
+    echo "Usuário 'xibo' não encontrado. Crie-o antes de configurar o autologin."
+    exit 1
+fi
+
+sudo install -d -m 0755 /etc/systemd/system/getty@tty1.service.d
+sudo tee /etc/systemd/system/getty@tty1.service.d/autologin.conf >/dev/null <<'EOF'
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --noclear --autologin xibo %I $TERM
+EOF
+sudo systemctl daemon-reload
+sudo systemctl enable getty@tty1.service
 touch ~/.bash_profile
 echo 'if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
     WLR_LIBINPUT_NO_DEVICES=1 exec sway
