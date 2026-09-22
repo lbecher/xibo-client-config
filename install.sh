@@ -69,7 +69,12 @@ sudo apt install -y \
     gvfs \
     gvfs-backends \
     thunar \
+    polkitd \
+    network-manager \
     network-manager-gnome
+
+sudo systemctl stop systemd-networkd
+sudo systemctl enable NetworkManager
 
 #---------------------------------------
 # Configurando autologin no tty1
