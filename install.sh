@@ -124,6 +124,9 @@ if [[ -z "$DISPLAY" ]] && \
    [[ -z "$WAYLAND_DISPLAY" ]] && \
    [[ "$(tty)" == "/dev/tty1" ]]; then
 
+    # Evita que o Sway inicie antes do GoogleTV.
+    sleep 10
+    
     exec env WLR_LIBINPUT_NO_DEVICES=1 sway
 fi
 EOF
